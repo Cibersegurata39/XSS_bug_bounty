@@ -11,8 +11,13 @@ En este nuevo repositorio de la sección de **Bug bounty** se va a tratar la vul
 </div>
 
 ## Introducción
-Las siglas *XSS* provienen de '*Cros-site Scripting*' y ocurre cuando.
+La vulnerabilidad '*Cros-site Scripting*' (*XSS*) se produce en el lado del cliente y permite a los atacantes inyectar código malicioso en la página web. Suele ocurrir por la falta de sanitización/validación de las aplicaciones webs. Los scripts son ejecutados por los navegadores de las víctimas y estos son escritos en lenguajes como *Javascript*, *Flash*, *CSS*… pues todos se ejecutan/interpretan en el navegador.
 
+Se pueden diferenciar dos tipos de *XSS*, el persistente y el reflejado.
+
+**XSS persistente**: el atacante inyecta el código *Javascript* en una base de datos de la aplicación web o un código fuente vía una entrada no sanitizada.
+
+**XSS reflejado**: es el más común. Se engaña a la víctima para que haga clic en un enlace elaborado que lleve a la *web* vulnerable. Al clicar, la *web* incluye el *payload XSS* en la respuesta al navegador de la víctima, donde el payload es ejecutado.
 
 
 Para llevar a cabo este ejercicio se ha utilizado la plataforma *[Docker labs](https://dockerlabs.es/)*, donde se encuentra la máquina virtual que utilizaremos '*Masa*'. Se descarga el *zip* en la propia *Kali* y extraemos el fichero *autodeploy.sh* y el archivo *tar*, que será la máquina con la que practicar. Para desplegar el laboratorio y obtener la direccion IP víctima sobre la que trabajar, se escribe el siguiente comando en la terminal:
