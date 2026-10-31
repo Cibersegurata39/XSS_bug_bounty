@@ -73,3 +73,5 @@ Basta con indicar en la dirección un *script* con el que se pretenda abrir una 
 <img width="1635" height="517" alt="Captura de pantalla 2026-10-29 125118" src="https://github.com/user-attachments/assets/3a5505ad-23eb-422b-b27d-061027737038" />
 
 Lo único necesario ahora, sería pasar este enlace al usuario para que lo abriera y fuera víctima del *Cross-site scripting*. Al no estar bien sanitizada la *web*, el *script* es ejecutado en el navegador de la víctima sin que el atacante haya inyectado el código en ninguna base de datos de la aplicación *web*.
+
+Con este ejercicio se ha podido demostrar cómo una vulnerabilidad *XSS* puede aparecer de diferentes formas y cómo un fallo en la validación y sanitización de las entradas puede permitir la ejecución de código *JavaScript* en el navegador de otros usuarios.
