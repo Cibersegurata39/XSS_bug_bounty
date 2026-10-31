@@ -37,3 +37,12 @@ Como resultado se ha descubierto el puerto 8000 con el servicio *http*, a travé
 
 <img width="765" height="266" alt="Captura de pantalla 2026-10-28 122223" src="https://github.com/user-attachments/assets/9f7d5651-3305-4f55-b033-ce83a25f8bce" />
 
+Como vemos en la imagen, es un puerto *http* por lo que la *IP* que se pone en el navegdaor es:
+
+<code>http://172.17.0.2:8000/</code>
+
+La página a la que nos dirige corresponde con una web que contiene información sobre los diferentes satélites y *rovers* que se encuentran en Marte. Para poder acceder a su información y ver un mapa que indica la posición de estos es necesario registrarse
+
+<img width="1912" height="912" alt="Captura de pantalla 2026-10-28 183226" src="https://github.com/user-attachments/assets/eeb205d8-743e-4eea-9115-b9bf8ae1ea06" />
+
+En el lado izquierdo hay un menú con botones para filtrar la información que queremos que se muestre en el mapa, estos botones son unos buneos candidatos para comprobar si se produce *XSS*. Por ejemplo, se clica en el *rover* Perseverance* para que deje de mostrarse en el mapa. Esto se hace desde el apartado llamado *Layer*. Para analizar la petición se utiliza una ves más *Burp Suite* y en el historial se presta atencaion a la petición *POST* en la que aparece '*/api/layer*'
