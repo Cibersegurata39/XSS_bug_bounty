@@ -45,4 +45,9 @@ La página a la que nos dirige corresponde con una web que contiene información
 
 <img width="1912" height="912" alt="Captura de pantalla 2026-10-28 183226" src="https://github.com/user-attachments/assets/eeb205d8-743e-4eea-9115-b9bf8ae1ea06" />
 
-En el lado izquierdo hay un menú con botones para filtrar la información que queremos que se muestre en el mapa, estos botones son unos buneos candidatos para comprobar si se produce *XSS*. Por ejemplo, se clica en el *rover* Perseverance* para que deje de mostrarse en el mapa. Esto se hace desde el apartado llamado *Layer*. Para analizar la petición se utiliza una ves más *Burp Suite* y en el historial se presta atencaion a la petición *POST* en la que aparece '*/api/layer*'
+En el lado izquierdo hay un menú con botones para filtrar la información que queremos que se muestre en el mapa, estos botones son unos buenos candidatos para comprobar si se produce *XSS*. Por ejemplo, se clica en el *rover Perseverance* para que deje de mostrarse en el mapa, desde el apartado llamado *Layer*. Para analizar la petición se utiliza una ves más *Burp Suite* y en el historial se presta atención a la petición *POST* en la que aparece '*/api/layer*'.
+
+Al mandar la petición al *repeater* se puede observar que en la respuesta del servidor se está reflejando el *rover* desactivado. Para asegurarnos, cambiamos en la misma petición el valor del campo *layer* a 'rover-prueba' y se confirma en la respuesta que este valor modificado es también reflejado.
+
+<img width="1507" height="1377" alt="image" src="https://github.com/user-attachments/assets/2946a895-b528-41ed-bd69-a20ecb82c9c2" />
+
