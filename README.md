@@ -8,6 +8,7 @@ En este nuevo repositorio de la sección de **Bug bounty** se va a tratar la vul
   <img src="https://img.shields.io/badge/-Bash-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white" />
   <img src="https://img.shields.io/badge/-Nmap-6933FF?style=for-the-badge&logo=nmap&logoColor=white" />
   <img src="https://img.shields.io/badge/-Burp suite-FF6633?style=for-the-badge&logo=burpsuite&logoColor=white" />
+  <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white" />
 </div>
 
 ## Introducción
@@ -51,3 +52,22 @@ Al mandar la petición al *repeater* se puede observar que en la respuesta del s
 
 <img width="1507" height="1377" alt="image" src="https://github.com/user-attachments/assets/2946a895-b528-41ed-bd69-a20ecb82c9c2" />
 
+Para hacerlo más visual, se puede cambiar el campo *layer* por un *script* que muestre un mensaje de alerta y abrimos la respuesta en el navegador. Indudablemente esto es lo que se conoce cómo un *XSS self*, pero esto no es suficiente para ser notificado, pues la propia víctima debería seguir todos estos pasos. Este es el típico *XSS* que se puede encontrar en un *Capture the flag*.
+
+<code><script>alert( 'GOTCHA' ) </script></code>
+
+<img width="658" height="282" alt="Captura de pantalla 2026-10-28 185300" src="https://github.com/user-attachments/assets/f0d8d97a-ed57-442e-a542-07459a06734a" />
+
+Pero si nos fijamos en la barra de direcciones, se puede modificar el propio *layer* de la *URL* para provocar un *XSS* reflejado.
+
+<code>http://172.17.0.2:8000/#layers=rover-curiosity%2Crover-zhurong%2Csat-mro%2Csat-odyssey&off=rover-perseverance%2Csat-hope%2Csat-maven%2Csat-tgo&sol=3368</code> 
+
+<img width="1835" height="302" alt="Captura de pantalla 2026-10-29 123646" src="https://github.com/user-attachments/assets/3c9b04f8-9568-471b-91e0-9e0a9c3e6852" />
+
+Basta con indicar en la dirección un *script* con el que se pretenda abrir una imagen cuya fuente no existe y al no encontrarla, mostrar un mensaje de alerta.
+
+<code>http://172.17.0.2:8000/#layers=<img src=x onerror=alert("Gotcha!!")></code>
+
+<img width="1635" height="517" alt="Captura de pantalla 2026-10-29 125118" src="https://github.com/user-attachments/assets/3a5505ad-23eb-422b-b27d-061027737038" />
+
+Lo único necesario ahora sería pasar este enlace a la víctima para que lo abriera y fuera víctima del *Cross-site scripting*. AL no estar bien sanitizada la *web*, el *script* es ejecutado en el navegador de la víctima sin que el atacante haya inyectado el código en ninguna base de datos de la aplicación *web*.
