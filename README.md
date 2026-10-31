@@ -1,6 +1,6 @@
 # Vulnerabilidad XSS
 
-En este nuevo repositorio de la sección de **Bug bounty** se va a tratar la vulnerabilidad **XSS** por medio de dos ejemplos. El primero más ilustrativo y el segundo más real y perfectamente localizable en algunas *webs* que no han sido bien diseñadas.  
+En este nuevo repositorio de la sección de **Bug bounty** se va a tratar la vulnerabilidad **XSS** por medio de dos ejemplos. El primero tiene un carácter más ilustrativo y el segundo más real y perfectamente localizable en algunas *webs* que no han sido bien diseñadas.  
 
 <div>
   <img src="https://img.shields.io/badge/-Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
@@ -18,7 +18,7 @@ Se pueden diferenciar dos tipos de *XSS*, el persistente y el reflejado.
 
 **XSS persistente**: el atacante inyecta el código *Javascript* en una base de datos de la aplicación web o un código fuente vía una entrada no sanitizada.
 
-**XSS reflejado**: es el más común. Se engaña a la víctima para que haga clic en un enlace elaborado que lleve a la *web* vulnerable. Al clicar, la *web* incluye el *payload XSS* en la respuesta al navegador de la víctima, donde el payload es ejecutado.
+**XSS reflejado**: es el más común. Se engaña a la víctima para que haga clic en un enlace elaborado que lleve a la *web* vulnerable. Al clicar, la *web* incluye el *payload XSS* en la respuesta del navegador de la víctima, donde el payload es ejecutado.
 
 
 Para llevar a cabo este ejercicio se ha utilizado la plataforma *[Docker labs](https://dockerlabs.es/)*, donde se encuentra la máquina virtual que utilizaremos '*Masa*'. Se descarga el *zip* en la propia *Kali* y extraemos el fichero *autodeploy.sh* y el archivo *tar*, que será la máquina con la que practicar. Para desplegar el laboratorio y obtener la direccion IP víctima sobre la que trabajar, se escribe el siguiente comando en la terminal:
@@ -30,7 +30,7 @@ Como último paso se deben añadir la IP y la dirección en '/etc/hosts', cómo 
 <code>172.17.0.2    masa.lab</code>
 
 ## Explotación
-Sin embargo, al dirigirnos a la IP correspondiente, no se consigue alcanzar. Por ello se realiza un **Nmap** para encontrar posibles puertos a los que conectarnos (-F indica que se miren los 100 puertos TCP más comunes). Se evita hacer ping (-Pn) y resolver nombres DNS (-n) para agilizar el escaneo. Para conocer las versiones que corren en cada puerto se indica el parámetro -sV y para añadirle velocidad al proceso se añade -T4.
+Sin embargo, al dirigirnos a la IP correspondiente, esta no se consigue alcanzar. Por ello se realiza un **Nmap** para encontrar posibles puertos a los que conectarnos (-F indica que se miren los 100 puertos TCP más comunes). Se evita hacer ping (-Pn) y resolver nombres DNS (-n) para agilizar el escaneo. Para conocer las versiones que corren en cada puerto se indica el parámetro -sV y para añadirle velocidad al proceso se añade -T4.
 
 <code>nmap -Pn -n -sV -F 172.17.0.2 -T4</code>
 
@@ -42,32 +42,34 @@ Como vemos en la imagen, es un puerto *http* por lo que la *IP* que se pone en e
 
 <code>http://172.17.0.2:8000/</code>
 
-La página a la que nos dirige corresponde con una web que contiene información sobre los diferentes satélites y *rovers* que se encuentran en Marte. Para poder acceder a su información y ver un mapa que indica la posición de estos es necesario registrarse
+La página a la que nos dirige corresponde con una web que contiene información sobre los diferentes satélites y *rovers* que se encuentran en Marte. Para poder acceder a su información y ver un mapa que indica la posición de estos es necesario registrarse.
 
 <img width="1912" height="912" alt="Captura de pantalla 2026-10-28 183226" src="https://github.com/user-attachments/assets/eeb205d8-743e-4eea-9115-b9bf8ae1ea06" />
 
-En el lado izquierdo hay un menú con botones para filtrar la información que queremos que se muestre en el mapa, estos botones son unos buenos candidatos para comprobar si se produce *XSS*. Por ejemplo, se clica en el *rover Perseverance* para que deje de mostrarse en el mapa, desde el apartado llamado *Layer*. Para analizar la petición se utiliza una ves más *Burp Suite* y en el historial se presta atención a la petición *POST* en la que aparece '*/api/layer*'.
+En el lado izquierdo hay un menú con botones para filtrar la información que queremos que se muestre en el mapa, estos botones son unos buenos candidatos para comprobar si se produce *XSS*. Por ejemplo, se clica en el *rover Perseverance* para que deje de mostrarse en el mapa, desde el apartado llamado *Layer*. Para analizar la petición se utiliza, una vez más, *Burp Suite* y en el historial se presta atención a la petición *POST* en la que aparece '*/api/layer*'.
 
 Al mandar la petición al *repeater* se puede observar que en la respuesta del servidor se está reflejando el *rover* desactivado. Para asegurarnos, cambiamos en la misma petición el valor del campo *layer* a 'rover-prueba' y se confirma en la respuesta que este valor modificado es también reflejado.
 
 <img width="1507" height="1377" alt="image" src="https://github.com/user-attachments/assets/2946a895-b528-41ed-bd69-a20ecb82c9c2" />
 
-Para hacerlo más visual, se puede cambiar el campo *layer* por un *script* que muestre un mensaje de alerta y abrimos la respuesta en el navegador. Indudablemente esto es lo que se conoce cómo un *XSS self*, pero esto no es suficiente para ser notificado, pues la propia víctima debería seguir todos estos pasos. Este es el típico *XSS* que se puede encontrar en un *Capture the flag*.
+Para hacerlo más visual, se puede cambiar el campo *layer* por un *script* que muestre un mensaje de alerta y abrimos la respuesta en el navegador.
 
 <code><script>alert( 'GOTCHA' ) </script></code>
+
+Indudablemente esto es lo que se conoce cómo un *XSS self*, pero esto no es suficiente para ser notificado, pues la propia víctima debería ejecutar todos estos pasos para que se mostrara el mensaje. Este es el típico *XSS* que se puede encontrar en un *Capture the flag*.
 
 <img width="658" height="282" alt="Captura de pantalla 2026-10-28 185300" src="https://github.com/user-attachments/assets/f0d8d97a-ed57-442e-a542-07459a06734a" />
 
 Pero si nos fijamos en la barra de direcciones, se puede modificar el propio *layer* de la *URL* para provocar un *XSS* reflejado.
 
-<code>http://172.17.0.2:8000/#layers=rover-curiosity%2Crover-zhurong%2Csat-mro%2Csat-odyssey&off=rover-perseverance%2Csat-hope%2Csat-maven%2Csat-tgo&sol=3368</code> 
+<code>`http://172.17.0.2:8000/#layers=rover-curiosity%2Crover-zhurong%2Csat-mro%2Csat-odyssey&off=rover-perseverance%2Csat-hope%2Csat-maven%2Csat-tgo&sol=3368`</code> 
 
 <img width="1835" height="302" alt="Captura de pantalla 2026-10-29 123646" src="https://github.com/user-attachments/assets/3c9b04f8-9568-471b-91e0-9e0a9c3e6852" />
 
 Basta con indicar en la dirección un *script* con el que se pretenda abrir una imagen cuya fuente no existe y al no encontrarla, mostrar un mensaje de alerta.
 
-<code>http://172.17.0.2:8000/#layers=<img src=x onerror=alert("Gotcha!!")></code>
+<code>`http://172.17.0.2:8000/#layers=<img src=x onerror=alert("Gotcha!!")>`</code>
 
 <img width="1635" height="517" alt="Captura de pantalla 2026-10-29 125118" src="https://github.com/user-attachments/assets/3a5505ad-23eb-422b-b27d-061027737038" />
 
-Lo único necesario ahora sería pasar este enlace a la víctima para que lo abriera y fuera víctima del *Cross-site scripting*. AL no estar bien sanitizada la *web*, el *script* es ejecutado en el navegador de la víctima sin que el atacante haya inyectado el código en ninguna base de datos de la aplicación *web*.
+Lo único necesario ahora, sería pasar este enlace al usuario para que lo abriera y fuera víctima del *Cross-site scripting*. Al no estar bien sanitizada la *web*, el *script* es ejecutado en el navegador de la víctima sin que el atacante haya inyectado el código en ninguna base de datos de la aplicación *web*.
